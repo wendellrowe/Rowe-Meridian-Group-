@@ -4,13 +4,10 @@
   "main": "src/index.js",
   "compatibility_date": "2026-08-01",
   "workers_dev": true,
-  // Custom domain routes are intentionally commented out until the firm's
-  // domain is chosen and added to Cloudflare. Uncomment, adjust the hostnames,
-  // and redeploy to attach them.
-  // "routes": [
-  //   { "pattern": "rowemeridian.com", "custom_domain": true },
-  //   { "pattern": "www.rowemeridian.com", "custom_domain": true }
-  // ],
+  "routes": [
+    { "pattern": "rowemeridiangroup.com", "custom_domain": true },
+    { "pattern": "www.rowemeridiangroup.com", "custom_domain": true }
+  ],
   "assets": {
     "directory": "./",
     "binding": "ASSETS",

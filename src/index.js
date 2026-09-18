@@ -1,4 +1,4 @@
-const CANONICAL_HOST = "rowemeridian.com";
+const CANONICAL_HOST = "rowemeridiangroup.com";
 
 /**
  * Hostnames permitted to POST to /api/inquiry. workers.dev preview hosts are

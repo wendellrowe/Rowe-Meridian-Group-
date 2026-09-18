@@ -47,9 +47,8 @@ npm install
 npx wrangler deploy
 ```
 
-This deploys to a `*.workers.dev` URL. To attach a custom domain, add the domain
-to the Cloudflare account, then uncomment and edit the `routes` block in
-`wrangler.jsonc` and redeploy.
+Deploys to `rowemeridiangroup.com` and `www.rowemeridiangroup.com` (the www host
+308-redirects to the apex), plus a `*.workers.dev` URL for previews.
 
 ### Inquiry email
 
