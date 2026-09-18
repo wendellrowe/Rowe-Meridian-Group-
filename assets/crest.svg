@@ -1,0 +1,24 @@
+<svg width="800" height="980" viewBox="0 0 800 980" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g" x1="120" y1="100" x2="690" y2="850" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F3E6B5"/><stop offset=".35" stop-color="#C6A75E"/><stop offset=".72" stop-color="#7C5920"/><stop offset="1" stop-color="#D3BC78"/>
+    </linearGradient>
+    <filter id="s" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="18" flood-opacity=".65"/></filter>
+  </defs>
+  <g filter="url(#s)" stroke="url(#g)">
+    <path d="M400 45l42 54 70-13-16 68 60 38-60 38 16 68-70-13-42 54-42-54-70 13 16-68-60-38 60-38-16-68 70 13 42-54z" stroke-width="5"/>
+    <path d="M327 169h146l-18 64H345l-18-64zM341 153l22-42 37 42 37-42 22 42" stroke-width="9"/>
+    <path d="M400 250C290 250 200 300 188 420v209c0 121 88 213 212 269 124-56 212-148 212-269V420C600 300 510 250 400 250z" fill="#070707" stroke-width="8"/>
+    <path d="M400 278C306 278 230 320 220 427v190c0 103 73 182 180 233 107-51 180-130 180-233V427C570 320 494 278 400 278z" stroke-width="2" opacity=".55"/>
+    <path d="M302 400l34 176 64-137 64 137 34-176" stroke-width="17" stroke-linecap="square" stroke-linejoin="miter"/>
+    <path d="M395 384h55c74 0 104 34 104 88 0 50-34 83-101 83h-50m84-1 74 108" stroke-width="15"/>
+    <path d="M218 720c-67 23-119 64-151 124 66-12 118-1 159 33M582 720c67 23 119 64 151 124-66-12-118-1-159 33" stroke-width="7"/>
+    <path d="M220 331c-93 25-155 81-188 168M580 331c93 25 155 81 188 168" stroke-width="5" opacity=".65"/>
+    <path d="M225 358c-48-2-84 15-108 48 49 3 86 22 110 57M575 358c48-2 84 15 108 48-49 3-86 22-110 57" stroke-width="5"/>
+    <path d="M210 480c-54 5-91 29-111 72 55-5 97 8 126 40M590 480c54 5 91 29 111 72-55-5-97 8-126 40" stroke-width="5"/>
+    <path d="M222 609c-53 17-85 48-96 95 52-16 96-12 132 13M578 609c53 17 85 48 96 95-52-16-96-12-132 13" stroke-width="5"/>
+    <path d="M153 879c125 41 369 41 494 0" stroke-width="4"/>
+    <path d="M202 854h396l-34 74H236l-34-74z" fill="#070707" stroke-width="5"/>
+  </g>
+  <text x="400" y="898" text-anchor="middle" fill="#C6A75E" font-family="Georgia, serif" font-size="24" letter-spacing="6">VINCIT QUI SE VINCIT</text>
+</svg>
