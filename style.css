@@ -766,6 +766,31 @@ blockquote.motto footer {
   border-top: 1px solid var(--line-soft);
 }
 
+.expectations {
+  margin-top: 40px;
+  padding-top: 26px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.expectations li {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 14px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--muted);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+}
+
+.expectations li b {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-label);
+  letter-spacing: 0.12em;
+  color: var(--gold);
+}
+
 .contact-direct p {
   font-size: var(--text-micro);
   letter-spacing: 0.28em;
@@ -844,7 +869,7 @@ fieldset.purpose legend {
   gap: 10px;
 }
 
-.purpose-options label {
+form.inquiry .purpose-options label {
   display: inline-flex;
   align-items: center;
   gap: 9px;
@@ -854,14 +879,16 @@ fieldset.purpose legend {
   font-size: var(--text-micro);
   letter-spacing: 0.16em;
   color: var(--muted);
+  white-space: nowrap;
   transition: border-color 220ms var(--ease), color 220ms var(--ease),
     background 220ms var(--ease);
 }
 
-.purpose-options label:hover { border-color: var(--line); color: var(--ivory); }
+form.inquiry .purpose-options label:hover { border-color: var(--line); color: var(--ivory); }
 
 .purpose-options input {
   appearance: none;
+  flex: none;
   width: 9px;
   height: 9px;
   border: 1px solid var(--gold);
@@ -871,7 +898,7 @@ fieldset.purpose legend {
 
 .purpose-options input:checked { background: var(--gold); }
 
-.purpose-options label:has(input:checked) {
+form.inquiry .purpose-options label:has(input:checked) {
   border-color: var(--gold);
   color: var(--gold);
   background: rgba(198, 167, 94, 0.07);
@@ -986,7 +1013,7 @@ footer.site-footer {
     padding-top: 128px;
   }
 
-  .crest-plate { width: min(100%, 340px); order: -1; justify-self: start; }
+  .crest-plate { width: min(100%, 300px); justify-self: start; }
   .scroll-cue { display: none; }
 
   .thesis-grid,
