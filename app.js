@@ -66,37 +66,84 @@
     sections.forEach(function (s) { spy.observe(s); });
   }
 
-  /* Inquiry form — composes a prepared email draft */
+  /* Inquiry form — posts to the Worker endpoint, falls back to a mail draft */
   var form = document.querySelector('[data-inquiry]');
   if (form) {
     var status = form.querySelector('[data-status]');
+    var submit = form.querySelector('button[type="submit"]');
+    var sending = false;
+
+    var say = function (text, state) {
+      if (!status) return;
+      status.textContent = text;
+      status.setAttribute('data-state', state || '');
+    };
+
+    var mailDraft = function (payload) {
+      var body = [
+        'Name: ' + payload.name,
+        payload.organization ? 'Organization: ' + payload.organization : null,
+        'Email: ' + payload.email,
+        'Purpose: ' + payload.purpose,
+        '',
+        payload.message
+      ].filter(function (line) { return line !== null; }).join('\n');
+
+      window.location.href = 'mailto:hello@wendellrowe.com'
+        + '?subject=' + encodeURIComponent('Rowe Meridian Group — ' + payload.purpose + ' inquiry')
+        + '&body=' + encodeURIComponent(body);
+    };
+
     form.addEventListener('submit', function (event) {
       event.preventDefault();
+      if (sending) return;
       if (form.elements.website && form.elements.website.value) return;
       if (!form.reportValidity()) return;
 
       var data = new FormData(form);
-      var name = (data.get('name') || '').toString().trim();
-      var org = (data.get('organization') || '').toString().trim();
-      var email = (data.get('email') || '').toString().trim();
-      var purpose = (data.get('purpose') || 'Inquiry').toString();
-      var message = (data.get('message') || '').toString().trim();
+      var payload = {
+        name: (data.get('name') || '').toString().trim(),
+        organization: (data.get('organization') || '').toString().trim(),
+        email: (data.get('email') || '').toString().trim(),
+        purpose: (data.get('purpose') || 'Inquiry').toString(),
+        message: (data.get('message') || '').toString().trim(),
+        website: ''
+      };
 
-      var body = [
-        'Name: ' + name,
-        org ? 'Organization: ' + org : null,
-        'Email: ' + email,
-        'Purpose: ' + purpose,
-        '',
-        message
-      ].filter(function (line) { return line !== null; }).join('\n');
+      sending = true;
+      if (submit) submit.disabled = true;
+      say('Sending…', 'pending');
 
-      var href = 'mailto:hello@wendellrowe.com'
-        + '?subject=' + encodeURIComponent('Rowe Meridian Group — ' + purpose + ' inquiry')
-        + '&body=' + encodeURIComponent(body);
-
-      window.location.href = href;
-      if (status) status.textContent = 'Draft prepared — your email application should now be open. If nothing happened, write to hello@wendellrowe.com directly.';
+      fetch('/api/inquiry', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+        .then(function (res) {
+          return res.json().catch(function () { return {}; }).then(function (b) {
+            return { ok: res.ok, body: b };
+          });
+        })
+        .then(function (result) {
+          if (result.ok && result.body.ok) {
+            form.reset();
+            say('Received. You will hear back from the principal directly, usually within two business days.', 'ok');
+            return;
+          }
+          if (result.body && result.body.error && String(result.body.error).indexOf('complete the required') === 0) {
+            say(result.body.error, 'error');
+            return;
+          }
+          throw new Error('endpoint unavailable');
+        })
+        .catch(function () {
+          say('Opening a prepared draft in your email application instead. If nothing happens, write to hello@wendellrowe.com.', 'error');
+          mailDraft(payload);
+        })
+        .then(function () {
+          sending = false;
+          if (submit) submit.disabled = false;
+        });
     });
   }
 

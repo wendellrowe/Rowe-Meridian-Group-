@@ -1,0 +1,13 @@
+README.md
+package.json
+package-lock.json
+wrangler.jsonc
+.assetsignore
+.gitignore
+node_modules/
+.git/
+.wrangler/
+.dev.vars*
+src/
+licenses/
+qa/

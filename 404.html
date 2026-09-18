@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#050505" />
+<meta name="robots" content="noindex, follow" />
+<title>Page not found — Rowe Meridian Group℠</title>
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="/assets/fonts/cinzel-latin-wght-normal.woff2" />
+<link rel="stylesheet" href="/base.css" />
+<link rel="stylesheet" href="/style.css" />
+<style>
+  .notfound {
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    padding: 96px var(--gutter);
+  }
+  .notfound-inner {
+    width: min(100%, 560px);
+    display: grid;
+    justify-items: start;
+    gap: 26px;
+    border: 1px solid var(--gold);
+    outline: 1px solid var(--line-soft);
+    outline-offset: 9px;
+    padding: clamp(32px, 5vw, 56px);
+    background: rgba(255, 255, 255, 0.012);
+  }
+  .notfound-inner .mark { width: 44px; height: 44px; color: var(--gold); }
+  .notfound-code {
+    font-family: var(--serif);
+    font-size: var(--text-micro);
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .notfound h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    line-height: 1.12;
+    color: var(--ivory);
+    margin: 0;
+  }
+  .notfound p { color: var(--muted); font-size: var(--text-sm); line-height: 1.75; max-width: 42ch; }
+  .notfound hr { width: 100%; height: 1px; border: 0; background: var(--line-soft); margin: 0; }
+</style>
+</head>
+<body>
+<div class="page-noise" aria-hidden="true"></div>
+
+<main class="notfound">
+  <div class="notfound-inner">
+    <svg class="mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <circle cx="20" cy="20" r="16.5" stroke="currentColor" stroke-width="1.2" />
+      <ellipse cx="20" cy="20" rx="6.4" ry="16.5" stroke="currentColor" stroke-width="1.2" />
+      <path d="M3.5 20h33" stroke="currentColor" stroke-width="1.2" />
+      <circle cx="20" cy="3.5" r="1.8" fill="currentColor" />
+    </svg>
+
+    <span class="notfound-code">Error 404</span>
+    <h1>This page is off the meridian.</h1>
+    <hr />
+    <p>
+      The address you followed does not resolve. Return to the practice, or write
+      directly to the principal.
+    </p>
+    <a class="cta" href="/">
+      <span>Return to Rowe Meridian Group</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
+    </a>
+  </div>
+</main>
+</body>
+</html>

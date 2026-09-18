@@ -1034,3 +1034,7 @@ footer.site-footer {
   .hero-meta div { flex-basis: 100%; }
   .footer-inner { flex-direction: column; align-items: flex-start; }
 }
+
+.form-note[data-state="pending"] { color: var(--muted); }
+.form-note[data-state="ok"] { color: var(--gold-bright); }
+.form-note[data-state="error"] { color: #d9a08a; }
