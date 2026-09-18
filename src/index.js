@@ -7,6 +7,35 @@ const CANONICAL_HOST = "rowemeridiangroup.com";
  */
 const ALLOWED_ORIGIN_HOSTS = new Set([CANONICAL_HOST, `www.${CANONICAL_HOST}`]);
 
+/**
+ * Applied in the Worker rather than relying solely on `_headers`, so the policy
+ * holds regardless of how the project is deployed.
+ */
+const SECURITY_HEADERS = {
+  "Content-Security-Policy":
+    "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; " +
+    "form-action 'self'; img-src 'self' data:; font-src 'self'; style-src 'self' 'unsafe-inline'; " +
+    "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; " +
+    "connect-src 'self' https://cloudflareinsights.com; upgrade-insecure-requests",
+  "Cross-Origin-Opener-Policy": "same-origin",
+  "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+};
+
+function harden(response, extra) {
+  const headers = new Headers(response.headers);
+  for (const [k, v] of Object.entries(SECURITY_HEADERS)) headers.set(k, v);
+  if (extra) for (const [k, v] of Object.entries(extra)) headers.set(k, v);
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -19,16 +48,15 @@ export default {
 
     if (url.pathname === "/api/inquiry") return handleInquiry(request, env);
 
-    const response = await env.ASSETS.fetch(request);
-    if (response.status !== 404) return response;
+    // Never serve the asset-config file itself.
+    if (url.pathname === "/_headers" || url.pathname === "/_redirects") {
+      return new Response("Not found", { status: 404 });
+    }
 
-    const notFound = await env.ASSETS.fetch(new Request(new URL("/404.html", url), request));
-    const headers = new Headers(notFound.headers);
-    headers.set("X-Robots-Tag", "noindex");
-    return new Response(request.method === "HEAD" ? null : notFound.body, {
-      status: 404,
-      headers,
-    });
+    // `not_found_handling: "404-page"` means the assets binding already returns
+    // the rendered 404 page body on a miss — just mark it noindex.
+    const response = await env.ASSETS.fetch(request);
+    return harden(response, response.status === 404 ? { "X-Robots-Tag": "noindex" } : null);
   },
 };
 

@@ -20,5 +20,8 @@
     <path d="M153 879c125 41 369 41 494 0" stroke-width="4"/>
     <path d="M202 854h396l-34 74H236l-34-74z" fill="#070707" stroke-width="5"/>
   </g>
-  <text x="400" y="898" text-anchor="middle" fill="#C6A75E" font-family="Georgia, serif" font-size="24" letter-spacing="6">VINCIT QUI SE VINCIT</text>
+  <!-- Sized to sit inside the ribbon's narrowest point (x 236-564) rather than
+       overrunning it into the laurel arc. The x nudge offsets the trailing
+       letter-space that text-anchor="middle" would otherwise centre on. -->
+  <text x="402" y="901" text-anchor="middle" fill="#C6A75E" font-family="Georgia, serif" font-size="18" letter-spacing="3.4">VINCIT QUI SE VINCIT</text>
 </svg>
