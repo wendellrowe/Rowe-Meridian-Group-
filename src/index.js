@@ -36,6 +36,64 @@ function harden(response, extra) {
   });
 }
 
+/**
+ * Cloudflare's static-asset binding answers every request with the full body and
+ * no `Accept-Ranges`, so browsers cannot scrub audio — a seek just restarts the
+ * track. Media responses are therefore range-served here.
+ */
+const RANGEABLE = /^(audio|video)\//;
+
+async function withRange(request, response) {
+  if (!RANGEABLE.test(response.headers.get("content-type") || "")) return response;
+
+  const range = request.headers.get("Range");
+
+  // Advertise support even on a full response, so the browser offers scrubbing.
+  if (!range || response.status !== 200) {
+    const headers = new Headers(response.headers);
+    headers.set("Accept-Ranges", "bytes");
+    return new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers,
+    });
+  }
+
+  const match = /^bytes=(\d*)-(\d*)$/.exec(range.trim());
+  if (!match || (match[1] === "" && match[2] === "")) return response;
+
+  const body = new Uint8Array(await response.arrayBuffer());
+  const size = body.byteLength;
+
+  let start;
+  let end;
+  if (match[1] === "") {
+    start = Math.max(0, size - Number(match[2])); // bytes=-N → trailing N bytes
+    end = size - 1;
+  } else {
+    start = Number(match[1]);
+    end = match[2] === "" ? size - 1 : Math.min(Number(match[2]), size - 1);
+  }
+
+  if (!Number.isFinite(start) || !Number.isFinite(end) || start > end || start >= size) {
+    return new Response(null, {
+      status: 416,
+      headers: { "Content-Range": `bytes */${size}`, "Accept-Ranges": "bytes" },
+    });
+  }
+
+  const headers = new Headers(response.headers);
+  headers.set("Accept-Ranges", "bytes");
+  headers.set("Content-Range", `bytes ${start}-${end}/${size}`);
+  headers.set("Content-Length", String(end - start + 1));
+
+  return new Response(body.subarray(start, end + 1), {
+    status: 206,
+    statusText: "Partial Content",
+    headers,
+  });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -55,7 +113,7 @@ export default {
 
     // `not_found_handling: "404-page"` means the assets binding already returns
     // the rendered 404 page body on a miss — just mark it noindex.
-    const response = await env.ASSETS.fetch(request);
+    const response = await withRange(request, await env.ASSETS.fetch(request));
     return harden(response, response.status === 404 ? { "X-Robots-Tag": "noindex" } : null);
   },
 };
