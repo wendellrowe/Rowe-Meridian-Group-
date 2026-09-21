@@ -766,6 +766,12 @@ blockquote.motto footer {
   border-top: 1px solid var(--line-soft);
 }
 
+.contact-direct .contact-phone {
+  display: flex;
+  width: max-content;
+  margin-top: 14px;
+}
+
 .expectations {
   margin-top: 40px;
   padding-top: 26px;
