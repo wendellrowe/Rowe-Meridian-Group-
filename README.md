@@ -47,8 +47,12 @@ npm install
 npx wrangler deploy
 ```
 
-Deploys to `rowemeridiangroup.com` and `www.rowemeridiangroup.com` (the www host
-308-redirects to the apex), plus a `*.workers.dev` URL for previews.
+Cloudflare Builds is connected to the repository's `main` branch. Each push to
+`main` triggers a Worker deployment.
+
+Deploys to `rowemeridiangroup.com`, `www.rowemeridiangroup.com`,
+`rowemeridian.com`, and `www.rowemeridian.com`. The alternate hosts redirect
+to the canonical `rowemeridiangroup.com` address.
 
 ### Inquiry email
 
