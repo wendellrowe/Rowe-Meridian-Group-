@@ -1,11 +1,16 @@
 const CANONICAL_HOST = "rowemeridiangroup.com";
+const ALIAS_HOSTS = new Set(["rowemeridian.com", "www.rowemeridian.com"]);
 
 /**
  * Hostnames permitted to POST to /api/inquiry. workers.dev preview hosts are
  * allowed dynamically so the form can be exercised before a custom domain
  * is attached.
  */
-const ALLOWED_ORIGIN_HOSTS = new Set([CANONICAL_HOST, `www.${CANONICAL_HOST}`]);
+const ALLOWED_ORIGIN_HOSTS = new Set([
+  CANONICAL_HOST,
+  `www.${CANONICAL_HOST}`,
+  ...ALIAS_HOSTS,
+]);
 
 /**
  * Applied in the Worker rather than relying solely on `_headers`, so the policy
@@ -98,8 +103,8 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // Collapse www -> apex once a custom domain is live.
-    if (url.hostname === `www.${CANONICAL_HOST}`) {
+    // Keep rowemeridiangroup.com canonical while supporting the shorter domain.
+    if (url.hostname === `www.${CANONICAL_HOST}` || ALIAS_HOSTS.has(url.hostname)) {
       url.hostname = CANONICAL_HOST;
       return Response.redirect(url.toString(), 308);
     }
@@ -164,7 +169,7 @@ async function handleInquiry(request, env) {
   // Honeypot: silently accept and discard.
   if (clean(data.website, 120)) return json({ ok: true });
 
-  const subject = "Rowe Meridian inquiry \u2014 " + purpose;
+  const subject = "Rowe Meridian inquiry — " + purpose;
   const text = [
     "Name: " + name,
     "Organization: " + (organization || "Not provided"),
