@@ -6,7 +6,9 @@
   "workers_dev": true,
   "routes": [
     { "pattern": "rowemeridiangroup.com", "custom_domain": true },
-    { "pattern": "www.rowemeridiangroup.com", "custom_domain": true }
+    { "pattern": "www.rowemeridiangroup.com", "custom_domain": true },
+    { "pattern": "rowemeridian.com", "custom_domain": true },
+    { "pattern": "www.rowemeridian.com", "custom_domain": true }
   ],
   "assets": {
     "directory": "./",
