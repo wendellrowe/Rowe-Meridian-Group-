@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#050505"/>
+  <rect x="36" y="36" width="1128" height="558" fill="none" stroke="#C6A75E" stroke-width="1.2"/>
+  <rect x="48" y="48" width="1104" height="534" fill="none" stroke="#C6A75E" stroke-width="0.4" opacity=".45"/>
+  <g transform="translate(468,48) scale(0.33)">
+    <g stroke="#C6A75E" fill="none">
+      <path d="M400 45l42 54 70-13-16 68 60 38-60 38 16 68-70-13-42 54-42-54-70 13 16-68-60-38 60-38-16-68 70 13 42-54z" stroke-width="5"/>
+      <path d="M327 169h146l-18 64H345l-18-64zM341 153l22-42 37 42 37-42 22 42" stroke-width="9"/>
+      <path d="M400 250C290 250 200 300 188 420v209c0 121 88 213 212 269 124-56 212-148 212-269V420C600 300 510 250 400 250z" fill="#070707" stroke-width="8"/>
+      <path d="M302 400l34 176 64-137 64 137 34-176" stroke-width="17" stroke-linecap="square"/>
+      <path d="M395 384h55c74 0 104 34 104 88 0 50-34 83-101 83h-50m84-1 74 108" stroke-width="15"/>
+    </g>
+  </g>
+  <text x="600" y="560" text-anchor="middle" fill="#C6A75E" font-family="Georgia, serif" font-size="22" letter-spacing="6">ROWE MERIDIAN GROUP</text>
+  <text x="600" y="592" text-anchor="middle" fill="#8A7A4A" font-family="Georgia, serif" font-size="13" letter-spacing="3">OPERATING COUNSEL · SAN FRANCISCO</text>
+</svg>
