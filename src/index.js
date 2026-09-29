@@ -1,21 +1,12 @@
 const CANONICAL_HOST = "rowemeridiangroup.com";
 const ALIAS_HOSTS = new Set(["rowemeridian.com", "www.rowemeridian.com"]);
 
-/**
- * Hostnames permitted to POST to /api/inquiry. workers.dev preview hosts are
- * allowed dynamically so the form can be exercised before a custom domain
- * is attached.
- */
 const ALLOWED_ORIGIN_HOSTS = new Set([
   CANONICAL_HOST,
   `www.${CANONICAL_HOST}`,
   ...ALIAS_HOSTS,
 ]);
 
-/**
- * Applied in the Worker rather than relying solely on `_headers`, so the policy
- * holds regardless of how the project is deployed.
- */
 const SECURITY_HEADERS = {
   "Content-Security-Policy":
     "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; " +
@@ -41,11 +32,6 @@ function harden(response, extra) {
   });
 }
 
-/**
- * Cloudflare's static-asset binding answers every request with the full body and
- * no `Accept-Ranges`, so browsers cannot scrub audio — a seek just restarts the
- * track. Media responses are therefore range-served here.
- */
 const RANGEABLE = /^(audio|video)\//;
 
 async function withRange(request, response) {
@@ -53,7 +39,6 @@ async function withRange(request, response) {
 
   const range = request.headers.get("Range");
 
-  // Advertise support even on a full response, so the browser offers scrubbing.
   if (!range || response.status !== 200) {
     const headers = new Headers(response.headers);
     headers.set("Accept-Ranges", "bytes");
@@ -73,7 +58,7 @@ async function withRange(request, response) {
   let start;
   let end;
   if (match[1] === "") {
-    start = Math.max(0, size - Number(match[2])); // bytes=-N → trailing N bytes
+    start = Math.max(0, size - Number(match[2]));
     end = size - 1;
   } else {
     start = Number(match[1]);
@@ -99,11 +84,23 @@ async function withRange(request, response) {
   });
 }
 
+async function withSiteExtras(response) {
+  const type = response.headers.get("content-type") || "";
+  if (!type.includes("text/html")) return response;
+  const html = await response.text();
+  if (html.includes("site-extras.js")) {
+    return new Response(html, { status: response.status, statusText: response.statusText, headers: response.headers });
+  }
+  const next = html.replace("</body>", '<script src="/site-extras.js"></script>\n</body>');
+  const headers = new Headers(response.headers);
+  headers.delete("content-length");
+  return new Response(next, { status: response.status, statusText: response.statusText, headers });
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // Keep rowemeridiangroup.com canonical while supporting the shorter domain.
     if (url.hostname === `www.${CANONICAL_HOST}` || ALIAS_HOSTS.has(url.hostname)) {
       url.hostname = CANONICAL_HOST;
       return Response.redirect(url.toString(), 308);
@@ -111,14 +108,12 @@ export default {
 
     if (url.pathname === "/api/inquiry") return handleInquiry(request, env);
 
-    // Never serve the asset-config file itself.
     if (url.pathname === "/_headers" || url.pathname === "/_redirects") {
       return new Response("Not found", { status: 404 });
     }
 
-    // `not_found_handling: "404-page"` means the assets binding already returns
-    // the rendered 404 page body on a miss — just mark it noindex.
-    const response = await withRange(request, await env.ASSETS.fetch(request));
+    const asset = await withRange(request, await env.ASSETS.fetch(request));
+    const response = await withSiteExtras(asset);
     return harden(response, response.status === 404 ? { "X-Robots-Tag": "noindex" } : null);
   },
 };
@@ -166,7 +161,6 @@ async function handleInquiry(request, env) {
     return json({ error: "Please complete the required fields." }, 400);
   }
 
-  // Honeypot: silently accept and discard.
   if (clean(data.website, 120)) return json({ ok: true });
 
   const subject = "Rowe Meridian inquiry — " + purpose;
