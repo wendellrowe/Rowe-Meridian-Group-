@@ -3,17 +3,15 @@
 Static site for Rowe Meridian Group℠, served by a Cloudflare Worker with a static
 assets binding. Same architecture as `wendellrowe-site`.
 
-## First contact (Cloudflare)
+## Security posture
 
-Search engines and some visitors still hit a Managed Challenge. That is a **zone
-security setting**, not a site-code setting. In the Cloudflare dashboard:
+The production zone should use Cloudflare's normal security controls rather than
+**Under Attack** mode during ordinary operation. Under Attack mode adds a Managed
+Challenge to visitors and can interfere with first-contact traffic and crawling.
+Cloudflare's baseline DDoS protection remains active independently.
 
-1. Security → Settings → Security Level → **Low** or **Essentially Off** (not I’m Under Attack).
-2. Security → Bots → Bot Fight Mode and Super Bot Fight Mode → **Off**.
-3. Security → WAF → Custom rules → disable any rule that Challenges or Blocks all traffic.
-4. Caching → Configuration → **Purge Everything**.
-
-Until that 403 challenge is gone, Google can keep showing stale copy (San José).
+The Worker applies security headers to every response and preserves range
+requests for audio/video without rewriting HTML response bodies.
 
 ## Structure
 
