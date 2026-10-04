@@ -84,19 +84,6 @@ async function withRange(request, response) {
   });
 }
 
-async function withSiteExtras(response) {
-  const type = response.headers.get("content-type") || "";
-  if (!type.includes("text/html")) return response;
-  const html = await response.text();
-  if (html.includes("site-extras.js")) {
-    return new Response(html, { status: response.status, statusText: response.statusText, headers: response.headers });
-  }
-  const next = html.replace("</body>", '<script src="/site-extras.js"></script>\n</body>');
-  const headers = new Headers(response.headers);
-  headers.delete("content-length");
-  return new Response(next, { status: response.status, statusText: response.statusText, headers });
-}
-
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -112,8 +99,7 @@ export default {
       return new Response("Not found", { status: 404 });
     }
 
-    const asset = await withRange(request, await env.ASSETS.fetch(request));
-    const response = await withSiteExtras(asset);
+    const response = await withRange(request, await env.ASSETS.fetch(request));
     return harden(response, response.status === 404 ? { "X-Robots-Tag": "noindex" } : null);
   },
 };
