@@ -6,7 +6,7 @@
   var progress = document.querySelector('[data-progress]');
   var toggle = document.querySelector('[data-menu]');
   var nav = document.getElementById('site-nav');
-  var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
+  var links = nav ? Array.prototype.slice.call(nav.querySelectorAll('a')) : [];
   var sections = links
     .map(function (a) { return document.querySelector(a.getAttribute('href')); })
     .filter(Boolean);
@@ -35,10 +35,17 @@
         toggle.setAttribute('aria-expanded', 'false');
       });
     });
+    document.addEventListener('keydown', function (event) {
+      if (event.key !== 'Escape' || !nav.classList.contains('is-open')) return;
+      nav.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.focus();
+    });
   }
 
-  /* Reveal on scroll */
+  /* Reveal on scroll — progressive enhancement: content stays visible if JS fails */
   var revealables = document.querySelectorAll('[data-reveal]');
+  revealables.forEach(function (el) { el.classList.add('reveal-pending'); });
   if ('IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
