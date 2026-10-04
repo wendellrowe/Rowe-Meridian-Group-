@@ -305,18 +305,23 @@ h2 em {
 /* ── Reveal ─────────────────────────────────────────────────────── */
 
 [data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+[data-reveal].reveal-pending {
   opacity: 0;
   transform: translateY(22px);
   transition: opacity 900ms var(--ease), transform 900ms var(--ease);
 }
 
-[data-reveal].is-visible {
+[data-reveal].reveal-pending.is-visible {
   opacity: 1;
   transform: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-reveal] { opacity: 1; transform: none; }
+  [data-reveal].reveal-pending { opacity: 1; transform: none; }
 }
 
 /* ── Hero ───────────────────────────────────────────────────────── */
@@ -1318,3 +1323,13 @@ footer.site-footer {
   .sound-shell, .sound-panel, .sound-progress-value { transition: none; }
   .sound-player[data-state="playing"] .sound-platter { animation: none; }
 }
+
+
+/* Privacy link within the form note */
+.form-note a {
+  color: var(--gold);
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+}
+.form-note a:hover { color: var(--gold-bright); text-decoration-color: var(--gold); }
